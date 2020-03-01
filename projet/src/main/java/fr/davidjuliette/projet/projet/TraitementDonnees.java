@@ -16,4 +16,18 @@ public abstract class TraitementDonnees {
 	public void verifierType() {
 		// Some code
 	}
+
+	public String getFileInput() {
+		return fileInput;
+	}
+
+	public String getFileDescription() {
+		return fileDescription;
+	}
+
+	public String getFileOutput() {
+		return fileOutput;
+	}
+	
+	
 }
