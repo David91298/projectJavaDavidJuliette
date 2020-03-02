@@ -1,5 +1,7 @@
 package regles;
 
+import java.util.Random;
+
 public class RandomLetter extends Regle {
 
 	public RandomLetter(String name) {
@@ -9,7 +11,23 @@ public class RandomLetter extends Regle {
 
 	@Override
 	public boolean appliquerRegle(String data) {
-		// TODO Auto-generated method stub
+		
+    	Random r = new Random();
+
+    	// Example
+    	String name = "David";
+    	
+        String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+               
+        StringBuilder newName = new StringBuilder(name);
+        
+        for (int i = 0 ; i < newName.length() ; i++) {
+        	char randomCharacter = alphabet.charAt(r.nextInt(alphabet.length()));
+        	newName.setCharAt(i, randomCharacter);
+        }
+        
+        System.out.println(newName);
+		
 		return false;
 	}
 
