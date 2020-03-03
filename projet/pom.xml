@@ -6,7 +6,7 @@
 	<groupId>fr.davidjuliette.projet</groupId>
 	<artifactId>projet</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>maven-plugin</packaging>
 
 	<name>projet</name>
 	<url>http://maven.apache.org</url>
@@ -21,6 +21,12 @@
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 
