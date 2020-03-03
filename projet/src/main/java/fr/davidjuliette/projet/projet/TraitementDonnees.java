@@ -12,10 +12,6 @@ public abstract class TraitementDonnees {
 	}
 	
 	public abstract void traiterDonnees();
-	
-	public void verifierType() {
-		// Some code
-	}
 
 	public String getFileInput() {
 		return fileInput;
@@ -27,6 +23,10 @@ public abstract class TraitementDonnees {
 
 	public String getFileOutput() {
 		return fileOutput;
+	}
+	
+	protected void readFile(){
+		
 	}
 	
 	

@@ -9,11 +9,11 @@ public class ReglesVerificationDonnees {
 		this.listeRegles = listeRegles;
 	}
 	
-	public void ajouterRegle(String regle) {
-		// Some code
+	public void ajouterRegle(Regle regle) {
+		listeRegles.add(regle);
 	}
 	
-	public void supprimerRegle(String regle) {
-		// Some code
+	public void supprimerRegle(Regle regle) {
+		listeRegles.remove(regle);
 	}
 }
