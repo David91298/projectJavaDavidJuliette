@@ -16,4 +16,8 @@ public class ReglesVerificationDonnees {
 	public void supprimerRegle(Regle regle) {
 		listeRegles.remove(regle);
 	}
+	
+	public ArrayList<Regle> getListeRegles() {
+		return listeRegles;
+	}
 }
