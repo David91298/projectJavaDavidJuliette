@@ -25,9 +25,5 @@ public abstract class TraitementDonnees {
 		return fileOutput;
 	}
 	
-	protected void readFile(){
-		
-	}
-	
 	
 }
