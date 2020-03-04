@@ -8,4 +8,8 @@ public abstract class Regle {
 	}
 	
 	public abstract boolean appliquerRegle(String data);
+	
+	public String getName() {
+		return name;
+	}
 }
