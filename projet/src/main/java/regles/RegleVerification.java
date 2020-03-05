@@ -1,9 +1,9 @@
 package regles;
 
-public abstract class Regle {
+public abstract class RegleVerification {
 	private String name;
 	
-	public Regle(String name) {
+	public RegleVerification(String name) {
 		this.name = name;
 	}
 	

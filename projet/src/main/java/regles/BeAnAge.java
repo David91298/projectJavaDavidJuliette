@@ -1,6 +1,6 @@
 package regles;
 
-public class BeAnAge extends Regle {
+public class BeAnAge extends RegleVerification {
 
 	public BeAnAge(String name) {
 		super(name);

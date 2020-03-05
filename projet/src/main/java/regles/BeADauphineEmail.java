@@ -3,7 +3,7 @@ package regles;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BeADauphineEmail extends Regle {
+public class BeADauphineEmail extends RegleVerification {
 
 	public BeADauphineEmail(String name) {
 		super(name);

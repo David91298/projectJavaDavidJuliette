@@ -15,22 +15,17 @@ public class App
 		VerificationDonnees vd = new VerificationDonnees(absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/input.csv", 
 				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/csvDescriptor.json", 
 				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/dataDescriptor.json", 
-				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/output.csv");
+				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/outputVerification.csv");
 		vd.traiterDonnees();
     	
-    	/*
-    	 * Data initialization 
-    	 */
-    	System.out.println("\n-------------------Anonymisations données-------------------");
-    	String fileInput = "C:/Users/david/OneDrive/Bureau/input.csv";
-    	String fileDescription = "fileDescription.json";
-    	String fileDescriptionAnonymized = "fileDescriptionAnonymized.json";
-    	String fileOutput = "output.csv";
-    	
-        AnonymisationDonnees anonymisationDonnees = new AnonymisationDonnees(
-        		fileInput, fileDescription, fileDescriptionAnonymized, fileOutput);
-        
-        anonymisationDonnees.traiterDonnees();
+		
+   	 	//Execution en mode Anonymisation données
+		System.out.println("-------------------Anonymisation données-------------------");
+		AnonymisationDonnees ad = new AnonymisationDonnees(absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/input.csv", 
+				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/csvDescriptor.json", 
+				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/regleAnonyme.json", 
+				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/outputAnonymisation.csv");
+		ad.traiterDonnees();
         
         
        

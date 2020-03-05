@@ -1,22 +1,12 @@
 package fr.davidjuliette.projet.projet;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import regles.BeADauphineEmail;
 import regles.BeAnAge;
 import regles.BeAnEmail;
-import regles.Regle;
-import regles.ReglesVerificationDonnees;
+import regles.RegleVerification;
 
 public class VerificationDonnees extends TraitementDonnees {
 	
@@ -48,7 +38,7 @@ public class VerificationDonnees extends TraitementDonnees {
 		
 		//Vérifie le type de chaque champ
 		System.out.println("\nDébut vérification type...");
-		List<String> dataTypeVerified = this.verifierType(inputArray,fileDescriptorArray);
+		List<String> dataTypeVerified = verifierType(inputArray,fileDescriptorArray);
 		System.out.println("Vérification type terminée: " + dataTypeVerified);
 
 		//Lecture du fichier décrivant les données à vérifier
@@ -67,95 +57,16 @@ public class VerificationDonnees extends TraitementDonnees {
 		
 		//Vérification des règles
 		BeAnAge beAnAge = new BeAnAge("BE_AN_AGE"); BeAnEmail beAnEmail = new BeAnEmail("BE_AN_EMAIL"); BeADauphineEmail beDauphineEmail = new BeADauphineEmail("BE_AN_DAUPHINE_EMAIL");
-		List <Regle> listRules = new ArrayList<>();
+		List <RegleVerification> listRules = new ArrayList<>();
 		listRules.add(beAnAge);listRules.add(beAnEmail);listRules.add(beDauphineEmail);
 		
 		System.out.println("\nDébut application des règles ...");
 		//L'Array list à transformer en fichier csv
-		System.out.println(appliquerRegle(inputArray, listRules, arrayIntemediate));
-	}
-	
-	/**
-	 * Vérifie si le type de chaque colonne est conforme, supprime les donnnées non conforme au type
-	 * @param inputArray
-	 * @param fileDescriptorArray
-	 * @return
-	 */
-	private List<String> verifierType(List <String> inputArray, List <String> fileDescriptorArray) {		
-		//Pour chaque ligne de l'input, vérifier le type
-		for (int i = 0; i < inputArray.size(); i++) {
-			System.out.println("\tDebut impression ligne " + (i+1));
-			String ligne = inputArray.get(i);
-			String [] elm = ligne.split(";");
-			for (int j = 0; j < elm.length; j++) {
-				boolean isSameType = comparer(elm[j], fileDescriptorArray.get(j));
-				System.out.println("\t\tComparaison " + elm[j] + " et " + fileDescriptorArray.get(j) + " = " + isSameType );
-				if (!isSameType) {
-					//Si le type ne coincide pas: supprimer la ligne
-					inputArray.remove(i);
-					break;
-				}
-			}
-		}
-		return inputArray;
-	}
-	
-	/**
-	 * Compare les données avec le type attendu
-	 * @param data
-	 * @param type
-	 * @return
-	 */
-	private boolean comparer(String data, String type) {
-		boolean result = true;
-		if(type.equals("STRING")) {
-			if(isDouble(data))
-				result = false;
-		}
-		else if(type.equals("INT")) {
-			if(!isInt(data))
-				result = false;
-		}
-		else if(type.equals("DOUBLE")) {
-			if(!isDouble(data))
-				result = false;
-		}
+		List <String> output = appliquerRegle(inputArray, listRules, arrayIntemediate);
+		System.out.println(output);
+		System.out.println("\nGénération du fichier output ...");
+		writeFile(this.getFileOutput(), output);
 		
-		return result;
-	}
-	
-	/**
-	 * Vérifie si une valeur est un entier
-	 * @param data
-	 * @return
-	 */
-	private static boolean isInt(String data) {
-	    if (data == null) {
-	        return false;
-	    }
-	    try {
-	        int d = Integer.parseInt(data);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
-	}
-	
-	/**
-	 * Vérifie si la valeur strNum est un boolean(marche aussi pour int)
-	 * @param data
-	 * @return
-	 */
-	private static boolean isDouble(String data) {
-	    if (data == null) {
-	        return false;
-	    }
-	    try {
-	        double d = Double.parseDouble(data);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
 	}
 	
     
@@ -166,7 +77,7 @@ public class VerificationDonnees extends TraitementDonnees {
      * @param tabRules
      * @return
      */
-    private List <String> appliquerRegle(List <String> input, List <Regle> listRules, String [] tabRules) {
+    private List <String> appliquerRegle(List <String> input, List <RegleVerification> listRules, String [] tabRules) {
     	//Pour chaque ligne de l'input, appliquer les regle demandé
 		for (int i = 0; i < input.size(); i++) {
 			System.out.println("\n\tDebut impression ligne " + (i+1));
