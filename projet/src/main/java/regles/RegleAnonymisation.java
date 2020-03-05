@@ -8,4 +8,8 @@ public abstract class RegleAnonymisation {
 	}
 	
 	public abstract String appliquerRegle(String data);
+	
+	public String getName() {
+		return name;
+	}
 }

@@ -16,9 +16,8 @@ public class RandomLetterForLocalPart extends RegleAnonymisation {
 		String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 		// Example
-		String mail = "david912@gmail.com";
 
-		String[] t = mail.split("@");
+		String[] t = data.split("@");
 
 		String localPart = t[0];
 
@@ -31,7 +30,7 @@ public class RandomLetterForLocalPart extends RegleAnonymisation {
 
 		newMail.append("@" + t[1]);
 
-		System.out.println(newMail);
+		System.out.println("Donnée anonymisée ="+newMail);
 		
 		return newMail.toString();
 	}
