@@ -44,29 +44,28 @@ public class VerificationDonnees extends TraitementDonnees {
 		for (int i = 0; i < enTete.length; i++) {
 			System.out.print(enTete[i]+" | ");
 		}
-		System.out.println(" ");
 		
 		//Lecture du fichier contenant la description du fichier avec les données		
 		List <String> fileDescriptorArray = this.lireJSON(getFileDescription(),"dataType");
 		
-		System.out.println("\tDonnées lues dans le fichier input:" + inputArray);
-		System.out.println("\tDonnées lues dans le champs 'dataType du fichier Datatype JSON:" + fileDescriptorArray);
+		System.out.println("\n\tDonnées lues dans le fichier input:" + inputArray);
+		System.out.println("\n\tDonnées lues dans le champs 'dataType du fichier Datatype JSON:" + fileDescriptorArray);
 		
 		//Vérifie le type de chaque champ
-		System.out.println("Début vérification type...");
+		System.out.println("\nDébut vérification type...");
 		List<String> dataTypeVerified = this.verifierType(inputArray,fileDescriptorArray);
 		System.out.println("Vérification type terminée: " + dataTypeVerified);
 
 		//Lecture du fichier décrivant les données à vérifier
-		System.out.println("Début lecture fichier decrivant les règles ...");
+		System.out.println("\nDébut lecture fichier decrivant les règles ...");
 		List <String> fileRuleTilteArray = this.lireJSON(fileRuleDescriptor,"name");
-		System.out.println("\tDonnées lues dans le champ 'name' du fichier JSON:" + fileRuleTilteArray);
+		System.out.println("\n\tDonnées lues dans le champ 'name' du fichier JSON:" + fileRuleTilteArray);
 		List <String> fileRuleDescriptorArray = this.lireJSON(fileRuleDescriptor,"should");
-		System.out.println("\tDonnées lues dans le champ 'should' du fichier JSON:" + fileRuleDescriptorArray);
+		System.out.println("\n\tDonnées lues dans le champ 'should' du fichier JSON:" + fileRuleDescriptorArray);
 		
 		//Construction d'une liste intérmédiaire entre enTete, fileRuleTilteArray et fileRuleTilteArray
 		String[] arrayIntemediate = buildArrayIntermediate(fileRuleTilteArray, fileRuleDescriptorArray);
-		System.out.print("\tTableau intermédiaire: ");
+		System.out.print("\n\tTableau intermédiaire: ");
 		for (int i = 0; i < arrayIntemediate.length; i++) {
 			System.out.print(arrayIntemediate[i]+" | ");
 		}
@@ -76,6 +75,7 @@ public class VerificationDonnees extends TraitementDonnees {
 		List <Regle> listRules = new ArrayList<>();
 		listRules.add(beAnAge);listRules.add(beAnEmail);listRules.add(beDauphineEmail);
 		
+		//L'Array list à transformer en fichier csv
 		System.out.println(appliquerRegle(inputArray, listRules, arrayIntemediate));
 	}
 	
@@ -95,6 +95,7 @@ public class VerificationDonnees extends TraitementDonnees {
 				boolean isSameType = comparer(elm[j], fileDescriptorArray.get(j));
 				System.out.println("\t\tComparaison " + elm[j] + " et " + fileDescriptorArray.get(j) + " = " + isSameType );
 				if (!isSameType) {
+					//Si le type ne coincide pas: supprimer la ligne
 					inputArray.remove(i);
 					break;
 				}
@@ -167,7 +168,8 @@ public class VerificationDonnees extends TraitementDonnees {
 	 * @return
 	 */
 	private List<String> lireFichier(String fileName) {
-		List <String> contenuFichier = new ArrayList<String>(); 
+		List <String> contenuFichier = new ArrayList<String>();
+		
 		try {
 			fileReader = new FileReader(fileName);
 			br = new BufferedReader(fileReader);
@@ -200,16 +202,15 @@ public class VerificationDonnees extends TraitementDonnees {
 	 */
 	private List <String> lireJSON(String fileName, String field) {
 		List <String> contenuFichier = new ArrayList <String>();
-		///JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
-         
+        
         try (FileReader reader = new FileReader(fileName))
         {
-            //Read JSON file
+            //Lecture du fichier JSON
             Object obj = jsonParser.parse(reader);
             JSONArray contentList = (JSONArray) obj;
              
-            //Iterate over employee array
+            //Pour chaque objet du fichier, on specifie le champ qu'on veut
             for (Object object : contentList) {
             	contenuFichier.add(getDataTypeContent( (JSONObject) object, field));
 			} 
@@ -268,7 +269,7 @@ public class VerificationDonnees extends TraitementDonnees {
      * @return
      */
     private List <String> appliquerRegle(List <String> input, List <Regle> listRules, String [] tabRules) {
-    	//Pour chaque ligne de l'input, vérifier le type
+    	//Pour chaque ligne de l'input, appliquer les regle demandé
 		for (int i = 0; i < input.size(); i++) {
 			System.out.println("\n\tDebut impression ligne " + (i+1));
 			String ligne = input.get(i);
@@ -277,17 +278,43 @@ public class VerificationDonnees extends TraitementDonnees {
 			for (int l = 0; l < data.length; l++) {
 				System.out.print(data[l]+" | ");
 			}
+			//On vérifie les regle à appliquer
 			for (int j = 0; j < tabRules.length; j++) {
 				if (!tabRules[j].equals("")) {
 					System.out.println("\n\t\tApplication de la règle: " + tabRules[j]);
+					//Pour chaque regle, verifier si il y a plusieurs regle à appliquer
 					for (int k = 0; k < listRules.size(); k++) {
-						if (tabRules[j].replace('"', '.').equals(listRules.get(k).getName())) {
-							System.out.println("\t\t" + tabRules[j] + " = à" + listRules.get(k).getName() + " donc application de la règle");
-							//On applique la regle au data: différent pour anonymisation
-							if(!listRules.get(k).appliquerRegle(data[j])) {
-								System.out.println("\t\t" + data[j] + " ne respecte pas la regle " + listRules.get(k).getName());
-								System.out.println("\t\t Suppression de : " + input.get(i));
-								input.remove(i);
+						//Si il faut appliquer plusieurs regles: NE CONCERNE PAS ANONYMISATION
+						if(tabRules[j].contains(",")) {
+							System.out.println("\t\t" + tabRules[j] + "contient une virgule");
+							String [] plusieurRegle = tabRules[j].split(",");
+							//Application des regles une par une
+							for (int m = 0; m < plusieurRegle.length; m++) {
+								plusieurRegle[m] = plusieurRegle[m].replaceAll("[\\W]", "");
+								System.out.println("\t\tRègle n°" + (m+1) + plusieurRegle[m]);
+								if (plusieurRegle[m].replace('"', '.').equals(listRules.get(k).getName())) {
+									System.out.println("\t\t" + plusieurRegle[m] + " = à " + listRules.get(k).getName() + " donc application de la règle");
+									//On applique la regle au data: différent pour anonymisation
+									if(!listRules.get(k).appliquerRegle(data[j])) {
+										System.out.println("\t\t" + data[j] + " ne respecte pas la regle " + listRules.get(k).getName());
+										System.out.println("\t\t Suppression de : " + input.get(i));
+										input.remove(i);
+									}
+								}
+							}
+
+						}
+						//sinon
+						else {
+							tabRules[j] = tabRules[j].replaceAll("[\\W]", "");
+							if (tabRules[j].replace('"', '.').equals(listRules.get(k).getName())) {
+								System.out.println("\t\t" + tabRules[j] + " = à " + listRules.get(k).getName() + " donc application de la règle");
+								//On applique la regle au data: différent pour anonymisation
+								if(!listRules.get(k).appliquerRegle(data[j])) {
+									System.out.println("\t\t" + data[j] + " ne respecte pas la regle " + listRules.get(k).getName());
+									System.out.println("\t\t Suppression de : " + input.get(i));
+									input.remove(i);
+								}
 							}
 						}
 					}
@@ -298,7 +325,8 @@ public class VerificationDonnees extends TraitementDonnees {
     	return input;
 	}
     
-    //Pout tester A SUPPRIMER QD TEST FINI
+    
+    //Exemple de traitement
 	public static void main(String[] args) {
 		String absolutePath = System.getProperty("user.dir");
 		VerificationDonnees vd = new VerificationDonnees(absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/input.csv", 
