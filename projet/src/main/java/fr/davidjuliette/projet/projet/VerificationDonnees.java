@@ -75,6 +75,7 @@ public class VerificationDonnees extends TraitementDonnees {
 		List <Regle> listRules = new ArrayList<>();
 		listRules.add(beAnAge);listRules.add(beAnEmail);listRules.add(beDauphineEmail);
 		
+		System.out.println("\nDébut application des règles ...");
 		//L'Array list à transformer en fichier csv
 		System.out.println(appliquerRegle(inputArray, listRules, arrayIntemediate));
 	}
@@ -286,18 +287,18 @@ public class VerificationDonnees extends TraitementDonnees {
 					for (int k = 0; k < listRules.size(); k++) {
 						//Si il faut appliquer plusieurs regles: NE CONCERNE PAS ANONYMISATION
 						if(tabRules[j].contains(",")) {
-							System.out.println("\t\t" + tabRules[j] + "contient une virgule");
+							System.out.println("\t\t" + tabRules[j] + "contient plusieur regle");
 							String [] plusieurRegle = tabRules[j].split(",");
 							//Application des regles une par une
 							for (int m = 0; m < plusieurRegle.length; m++) {
 								plusieurRegle[m] = plusieurRegle[m].replaceAll("[\\W]", "");
-								System.out.println("\t\tRègle n°" + (m+1) + plusieurRegle[m]);
+								System.out.println("\t\tRègle n°" + (m+1) + " " + plusieurRegle[m]);
 								if (plusieurRegle[m].replace('"', '.').equals(listRules.get(k).getName())) {
 									System.out.println("\t\t" + plusieurRegle[m] + " = à " + listRules.get(k).getName() + " donc application de la règle");
 									//On applique la regle au data: différent pour anonymisation
 									if(!listRules.get(k).appliquerRegle(data[j])) {
 										System.out.println("\t\t" + data[j] + " ne respecte pas la regle " + listRules.get(k).getName());
-										System.out.println("\t\t Suppression de : " + input.get(i));
+										System.out.println("\n\t\t Suppression de : " + input.get(i));
 										input.remove(i);
 									}
 								}
@@ -312,7 +313,7 @@ public class VerificationDonnees extends TraitementDonnees {
 								//On applique la regle au data: différent pour anonymisation
 								if(!listRules.get(k).appliquerRegle(data[j])) {
 									System.out.println("\t\t" + data[j] + " ne respecte pas la regle " + listRules.get(k).getName());
-									System.out.println("\t\t Suppression de : " + input.get(i));
+									System.out.println("\n\t\t Suppression de : " + input.get(i));
 									input.remove(i);
 								}
 							}
