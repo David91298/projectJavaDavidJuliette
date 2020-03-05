@@ -2,7 +2,7 @@ package regles;
 
 import java.util.Random;
 
-public class RandomLetter extends Regle {
+public class RandomLetter extends RegleAnonymisation {
 
 	public RandomLetter(String name) {
 		super(name);
@@ -10,9 +10,8 @@ public class RandomLetter extends Regle {
 	}
 
 	@Override
-	public boolean appliquerRegle(String data) {
-		
-    	Random r = new Random();
+	public String appliquerRegle(String data) {
+		Random r = new Random();
 
     	// Example
     	String name = "David";
@@ -27,8 +26,8 @@ public class RandomLetter extends Regle {
         }
         
         System.out.println(newName);
-		
-		return false;
+        
+        return newName.toString();
 	}
 
 }
