@@ -21,11 +21,6 @@ import regles.ReglesVerificationDonnees;
 public class VerificationDonnees extends TraitementDonnees {
 	
 	private String fileRuleDescriptor;
-	private FileReader fileReader;
-	private BufferedReader br;
-	private BufferedWriter bw;
-	private FileWriter fileWriter;
-	private String [] enTete;
 
 	public VerificationDonnees(String fileInput, String fileDescription, String fileRuleDescriptor, String fileOutput) {
 		super(fileInput, fileDescription, fileOutput);
@@ -36,13 +31,13 @@ public class VerificationDonnees extends TraitementDonnees {
 	public void traiterDonnees() {
 		System.out.println("Début lecture fichier ...");
 		//Lecture du fichier avec les données à vérifier
-		List<String> inputArray = this.lireFichier(this.getFileInput());
-		enTete = inputArray.get(0).split(";");
+		List<String> inputArray = lireFichier(this.getFileInput());
+		this.setEnTete(inputArray.get(0).split(";"));
 		inputArray.remove(0); // Pour n'avoir que la data
 		
 		System.out.print("\tContenu entete: ");
-		for (int i = 0; i < enTete.length; i++) {
-			System.out.print(enTete[i]+" | ");
+		for (int i = 0; i < this.getEnTete().length; i++) {
+			System.out.print(this.getEnTete()[i]+" | ");
 		}
 		
 		//Lecture du fichier contenant la description du fichier avec les données		
@@ -163,104 +158,6 @@ public class VerificationDonnees extends TraitementDonnees {
 	    return true;
 	}
 	
-	/**
-	 * Permet de lire un fichier
-	 * @param fileName
-	 * @return
-	 */
-	private List<String> lireFichier(String fileName) {
-		List <String> contenuFichier = new ArrayList<String>();
-		
-		try {
-			fileReader = new FileReader(fileName);
-			br = new BufferedReader(fileReader);
-			
-			//Lecture ligne par ligne
-			String row;
-			try {
-				while((row = br.readLine()) != null ) {
-					String[] data = row.split(":");
-					for (int i = 0; i < data.length; i++) {
-						contenuFichier.add(data[i]);
-					}
-				} 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		} catch (FileNotFoundException e){
-			e.printStackTrace();
-		}	
-		
-		return contenuFichier;
-
-	}
-	
-	/**
-	 * Permet de lire un fichier JSON
-	 * @param fileName
-	 * @return
-	 */
-	private List <String> lireJSON(String fileName, String field) {
-		List <String> contenuFichier = new ArrayList <String>();
-        JSONParser jsonParser = new JSONParser();
-        
-        try (FileReader reader = new FileReader(fileName))
-        {
-            //Lecture du fichier JSON
-            Object obj = jsonParser.parse(reader);
-            JSONArray contentList = (JSONArray) obj;
-             
-            //Pour chaque objet du fichier, on specifie le champ qu'on veut
-            for (Object object : contentList) {
-            	contenuFichier.add(getDataTypeContent( (JSONObject) object, field));
-			} 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (org.json.simple.parser.ParseException e) {
-            e.printStackTrace();
-        }
-       
-        return contenuFichier;
-
-	}
-        
-	/**
-	 * Simplifie la récupération des champs du JSON pour le fileDescriptor
-	 * @param content
-	 * @return
-	 */
-    private String getDataTypeContent(JSONObject content, String field) 
-    {
-    	if(content.get(field) instanceof JSONArray) {
-    		return content.get(field).toString();
-    	}
-        return (String) content.get(field);
-    }
-	
-    /**
-     * Permet de construire un tableau qui a les règles dans les ieme colonne des titres
-     * @param titleArray
-     * @param rulesArray
-     * @return
-     */
-    private String[] buildArrayIntermediate(List <String> titleArray, List <String> rulesArray) {
-    	String [] result= new String [enTete.length];
-    	for (int i = 0; i < enTete.length; i++) {
-			if (titleArray.contains(enTete[i])) { 
-				for (int j = 0; j < titleArray.size(); j++) 
-					if(titleArray.get(j).equals(enTete[i])) 
-						result[i] = rulesArray.get(j);
-			}
-			else
-				result[i] = "";
-		}
-    	
-    	return result;
-    	
-	}
     
     /**
      * Vérifie les regles dans les champs correspondants et supprime les lignes qui ne respectent pas la regle
@@ -324,18 +221,6 @@ public class VerificationDonnees extends TraitementDonnees {
 			
 		}
     	return input;
-	}
-    
-    
-    //Exemple de traitement
-	public static void main(String[] args) {
-		String absolutePath = System.getProperty("user.dir");
-		VerificationDonnees vd = new VerificationDonnees(absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/input.csv", 
-				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/csvDescriptor.json", 
-				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/dataDescriptor.json", 
-				absolutePath + "/src/main/java/fr/davidjuliette/projet/projet/output.csv");
-		vd.traiterDonnees();
-		
-	}
+	}    
 	
 }
