@@ -2,7 +2,7 @@ package regles;
 
 import java.util.Random;
 
-public class RandomLetterForLocalPart extends Regle {
+public class RandomLetterForLocalPart extends RegleAnonymisation {
 
 	public RandomLetterForLocalPart(String name) {
 		super(name);
@@ -10,13 +10,12 @@ public class RandomLetterForLocalPart extends Regle {
 	}
 
 	@Override
-	public boolean appliquerRegle(String data) {
-		
+	public String appliquerRegle(String data) {
 		Random r = new Random();
-		
+
 		String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-		//Example
+		// Example
 		String mail = "david912@gmail.com";
 
 		String[] t = mail.split("@");
@@ -33,8 +32,8 @@ public class RandomLetterForLocalPart extends Regle {
 		newMail.append("@" + t[1]);
 
 		System.out.println(newMail);
-
-		return false;
+		
+		return newMail.toString();
 	}
 
 }
