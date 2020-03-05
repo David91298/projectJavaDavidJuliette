@@ -14,12 +14,14 @@ public class BeADauphineEmail extends Regle {
 	public boolean appliquerRegle(String data) {
 		Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@dauphine+\\.eu");
         Matcher mat = pattern.matcher(data);
+        Pattern pattern1 = Pattern.compile("[A-Za-z0-9._%+-]+@dauphine+\\.psl+\\.eu");
+        Matcher mat1 = pattern.matcher(data);
+        Pattern pattern2 = Pattern.compile("[A-Za-z0-9._%+-]+@lamsade+\\.dauphine+\\.fr");
+        Matcher mat2 = pattern.matcher(data);
         
-		return mat.matches()? true : false;
+        
+        
+		return mat.matches() || mat1.matches() || mat2.matches()? true : false;
 	}
 	
-	public static void main(String[] args){
-        BeADauphineEmail be = new BeADauphineEmail("cdse");
-        System.out.println(be.appliquerRegle("csdc@dauphine.eu"));
-    }
 }

@@ -11,8 +11,4 @@ public class BeAnAge extends Regle {
 		return (Integer.parseInt(data)>0 && Integer.parseInt(data)<150)? true : false;
 	}
 
-	public static void main(String[] args) {
-		BeAnAge be = new BeAnAge("nom");
-		System.out.println(be.appliquerRegle("211"));
-	}
 }
